@@ -20,5 +20,5 @@ id alxndr
 
 ### Result
 
-![Creating a New Linux User](01.useradd.png)
+![Creating a New Linux User](useradd.png)
 

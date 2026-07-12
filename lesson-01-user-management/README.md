@@ -22,3 +22,9 @@ id alxndr
 
 ![Creating a New Linux User](useradd.png)
 
+## Setting a User Password
+
+I set a password for the user using the `passwd` command.
+
+```bash
+sudo passwd modfg

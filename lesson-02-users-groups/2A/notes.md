@@ -1,12 +1,12 @@
-# Lesson 02 - Users and Groups
+# Project 2A - Linux User Management
 
-In this lesson, I practiced creating, modifying, securing, and deleting Linux user accounts.
+In this project, I practiced basic Linux user management commands, including creating users, setting passwords, modifying user information, configuring password aging, verifying account information, and deleting users.
 
 ---
 
 ## 1. Creating a New User
 
-I created a new user named `Alxndr` and gave the account a home directory.
+I created a new Linux user named `Alxndr` and created a home directory for the account.
 
 ### Command
 
@@ -14,23 +14,21 @@ I created a new user named `Alxndr` and gave the account a home directory.
 sudo useradd -m Alxndr
 ```
 
-The `-m` option creates a home directory for the new user.
-
 ### Verification
 
 ```bash
 id Alxndr
 ```
 
-The output displayed the user's UID, GID, and group membership.
+This command displays the user's UID, GID, and group membership.
 
 ### Screenshot
 
-![Creating a Linux User](2A-useradd-user-creation.png)
+![Creating a New Linux User](2A-useradd-user-creation.png)
 
 ---
 
-## 2. Setting and Testing the User Password
+## 2. Setting a User Password
 
 I set a password for the user using the `passwd` command.
 
@@ -40,11 +38,15 @@ I set a password for the user using the `passwd` command.
 sudo passwd alxndr
 ```
 
-The message below confirmed that the password was updated successfully:
+The message:
 
 ```text
 passwd: password updated successfully
 ```
+
+confirmed that the password was changed successfully.
+
+### Password Test
 
 I tested the password by switching to the user account:
 
@@ -52,21 +54,40 @@ I tested the password by switching to the user account:
 su - alxndr
 ```
 
-Then I returned to my original account using:
-
-```bash
-exit
-```
-
 ### Screenshot
 
-![Setting and Testing a User Password](2A-passwd-user-password.png)
+![Setting a User Password](2A-passwd-user-password.png)
 
 ---
 
-## 3. Modifying User Information
+## 3. Verifying the User Entry
 
-I modified the account information for the user `Alxndr`.
+I checked the user's entry in `/etc/passwd`.
+
+### Command
+
+```bash
+grep '^Alxndr:' /etc/passwd
+```
+
+The output shows information such as:
+
+- Username
+- UID
+- GID
+- User description
+- Home directory
+- Login shell
+
+### Screenshot
+
+![Verifying the User Entry](2A-passwd-entry-verification.png)
+
+---
+
+## 4. Modifying User Information
+
+I modified the user information using the `usermod` command.
 
 ### Command
 
@@ -74,7 +95,7 @@ I modified the account information for the user `Alxndr`.
 sudo usermod -c "Alxndr alee" Alxndr
 ```
 
-The `-c` option changes the comment field, which can store the user's full name or description.
+The `-c` option changes the comment field for the user.
 
 ### Verification
 
@@ -82,37 +103,39 @@ The `-c` option changes the comment field, which can store the user's full name 
 grep '^Alxndr:' /etc/passwd
 ```
 
-The output confirmed that the comment field was changed to:
-
-```text
-Alxndr alee
-```
+This confirmed that the user's information was updated successfully.
 
 ### Screenshot
 
-![Modifying a Linux User](2A-usermod-user-update.png)
+![Modifying User Information](2A-usermod-user-update.png)
 
 ---
 
-## 4. Configuring Account and Password Expiration
+## 5. Configuring Password Aging and Account Expiration
 
-I configured the account to expire on August 31, 2026.
+I configured an expiration date for the user account.
 
-### Account Expiration Command
+### Account Expiration
 
 ```bash
 sudo chage -E 2026-08-31 Alxndr
 ```
 
-I also configured the password-aging policy.
+The account was configured to expire on:
 
-### Password-Aging Command
+```text
+August 31, 2026
+```
+
+### Password Aging
+
+I configured the password policy using:
 
 ```bash
 sudo chage -m 30 -M 60 Alxndr
 ```
 
-The password policy was configured as follows:
+The policy was:
 
 - Minimum password age: `30 days`
 - Maximum password age: `60 days`
@@ -127,13 +150,13 @@ sudo chage -l Alxndr
 
 ### Screenshot
 
-![Configuring Account and Password Expiration](2A-chage-passwd-user.png)
+![Password Aging and Account Expiration](2A-chage-passwd-user.png)
 
 ---
 
-## 5. Deleting the User
+## 6. Deleting the User
 
-I deleted the user `Alxndr` and removed the user's home directory.
+I deleted the user and removed the user's home directory.
 
 ### Command
 
@@ -141,21 +164,13 @@ I deleted the user `Alxndr` and removed the user's home directory.
 sudo userdel -r Alxndr
 ```
 
-Linux displayed this message:
-
-```text
-userdel: Alxndr mail spool (/var/mail/Alxndr) not found
-```
-
-This only means that the user did not have a mail spool file.
-
 ### Verification
 
 ```bash
 id Alxndr
 ```
 
-Linux displayed:
+After deletion, Linux displayed:
 
 ```text
 id: ‘Alxndr’: no such user
@@ -174,14 +189,19 @@ This confirmed that the account was deleted successfully.
 ```bash
 sudo useradd -m Alxndr
 id Alxndr
+
 sudo passwd alxndr
 su - alxndr
-exit
+
+grep '^Alxndr:' /etc/passwd
+
 sudo usermod -c "Alxndr alee" Alxndr
 grep '^Alxndr:' /etc/passwd
+
 sudo chage -E 2026-08-31 Alxndr
 sudo chage -m 30 -M 60 Alxndr
 sudo chage -l Alxndr
+
 sudo userdel -r Alxndr
 id Alxndr
 ```
@@ -190,11 +210,12 @@ id Alxndr
 
 ## What I Learned
 
-- Creating a Linux user with a home directory.
-- Verifying a user account using `id`.
-- Setting and testing a user's password.
-- Modifying user information using `usermod`.
-- Configuring account expiration using `chage`.
-- Configuring minimum and maximum password ages.
-- Verifying password-aging settings.
-- Deleting a user and confirming that the account no longer exists.
+- How to create a Linux user.
+- How to create a home directory for a new user.
+- How to verify a user with `id`.
+- How to set and test a user password.
+- How to inspect a user's `/etc/passwd` entry.
+- How to modify user information with `usermod`.
+- How to configure password aging with `chage`.
+- How to set an account expiration date.
+- How to delete a user and verify that the account no longer exists.

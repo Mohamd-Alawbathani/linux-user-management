@@ -1,6 +1,6 @@
 # Project 2B - Linux Group Management
 
-In this project, I practiced creating, modifying, checking, and deleting Linux groups.
+In this project, I practiced creating, modifying, managing, verifying, and deleting Linux groups.
 
 ---
 
@@ -16,19 +16,9 @@ sudo groupadd Engineers
 
 ### Verification
 
-I verified that the group was created successfully using:
-
 ```bash
 getent group Engineers
 ```
-
-The output showed:
-
-```text
-Engineers:x:1014:
-```
-
-This confirms that the `Engineers` group was created successfully.
 
 ### Screenshot
 
@@ -38,37 +28,25 @@ This confirms that the `Engineers` group was created successfully.
 
 ## 2. Renaming a Group
 
-I changed the group name from `Engineers` to `CayberTeam`.
+I renamed the group from `Engineers` to `CyberTeam`.
 
 ### Command
 
 ```bash
-sudo groupmod -n CayberTeam Engineers
+sudo groupmod -n CyberTeam Engineers
 ```
-
-The `-n` option changes the group name.
 
 ### Verification
 
-I checked the new group name using:
-
 ```bash
-getent group CayberTeam
+getent group CyberTeam
 ```
 
-The output showed:
-
-```text
-CayberTeam:x:1013:Alxndr
-```
-
-I also checked the old group name:
+I also checked that the old group name no longer existed:
 
 ```bash
 getent group Engineers
 ```
-
-No output appeared, which confirms that the old group name no longer exists.
 
 ### Screenshot
 
@@ -78,7 +56,7 @@ No output appeared, which confirms that the old group name no longer exists.
 
 ## 3. Adding a User to a Group
 
-I created a new group named `Developers` and added the user `Alxndr` to it.
+I added the user `Alxndr` to the `Developers` group.
 
 ### Commands
 
@@ -87,23 +65,11 @@ sudo groupadd Developers
 sudo usermod -aG Developers Alxndr
 ```
 
-The `-aG` options add the user to a supplementary group without removing the user from other groups.
-
 ### Verification
-
-I verified that the user was added successfully using:
 
 ```bash
 getent group Developers
 ```
-
-The output showed:
-
-```text
-Developers:x:1015:Alxndr
-```
-
-This confirms that `Alxndr` is a member of the `Developers` group.
 
 ### Screenshot
 
@@ -111,39 +77,142 @@ This confirms that `Alxndr` is a member of the `Developers` group.
 
 ---
 
-## 4. Deleting a Group
+## 4. Viewing Group Members
 
-I deleted the group named `CayberTeam`.
+I checked the members of the `Developers` group.
 
 ### Command
 
 ```bash
-sudo groupdel CayberTeam
+getent group Developers
+```
+
+This command displays the group name, GID, and group members.
+
+### Screenshot
+
+![Viewing Group Members](2B-group-members-verification.png)
+
+---
+
+## 5. Adding Multiple Users to a Group
+
+I added multiple users to the same group.
+
+### Commands
+
+```bash
+sudo usermod -aG Developers user1
+sudo usermod -aG Developers user2
 ```
 
 ### Verification
 
-I checked whether the group still existed using:
-
 ```bash
-getent group CayberTeam
+getent group Developers
 ```
 
-No output appeared.
+### Screenshot
 
-I then checked the exit status using:
+![Adding Multiple Users to a Group](2B-add-multiple-users-to-group.png)
+
+---
+
+## 6. Removing a User from a Group
+
+I removed the user `Alxndr` from the `Developers` group.
+
+### Command
+
+```bash
+sudo gpasswd -d Alxndr Developers
+```
+
+### Verification
+
+```bash
+getent group Developers
+```
+
+### Screenshot
+
+![Removing a User from a Group](2B-remove-user-from-group.png)
+
+---
+
+## 7. Changing the Group ID
+
+I changed the GID of the `Developers` group.
+
+### Command
+
+```bash
+sudo groupmod -g 1050 Developers
+```
+
+### Verification
+
+```bash
+getent group Developers
+```
+
+### Screenshot
+
+![Changing Group ID](2B-groupmod-change-gid.png)
+
+---
+
+## 8. Viewing All Groups for a User
+
+I checked all groups that the user `Alxndr` belongs to.
+
+### Command
+
+```bash
+groups Alxndr
+```
+
+I can also use:
+
+```bash
+id Alxndr
+```
+
+### Screenshot
+
+![Viewing User Groups](2B-user-groups-verification.png)
+
+---
+
+## 9. Deleting a Group
+
+I deleted the `CyberTeam` group.
+
+### Command
+
+```bash
+sudo groupdel CyberTeam
+```
+
+### Verification
+
+```bash
+getent group CyberTeam
+```
+
+Then I checked the exit status:
 
 ```bash
 echo $?
 ```
 
-The result was:
+If the result is:
 
 ```text
 2
 ```
 
-This confirms that the group was not found and had been deleted successfully.
+the group was not found.
 
 ### Screenshot
 
@@ -157,16 +226,26 @@ This confirms that the group was not found and had been deleted successfully.
 sudo groupadd Engineers
 getent group Engineers
 
-sudo groupmod -n CayberTeam Engineers
-getent group CayberTeam
+sudo groupmod -n CyberTeam Engineers
+getent group CyberTeam
 getent group Engineers
 
 sudo groupadd Developers
 sudo usermod -aG Developers Alxndr
 getent group Developers
 
-sudo groupdel CayberTeam
-getent group CayberTeam
+sudo usermod -aG Developers user1
+sudo usermod -aG Developers user2
+
+sudo gpasswd -d Alxndr Developers
+
+sudo groupmod -g 1050 Developers
+
+groups Alxndr
+id Alxndr
+
+sudo groupdel CyberTeam
+getent group CyberTeam
 echo $?
 ```
 
@@ -174,9 +253,13 @@ echo $?
 
 ## What I Learned
 
-- How to create a group using `groupadd`.
-- How to verify a group using `getent group`.
-- How to rename a group using `groupmod -n`.
-- How to add a user to a supplementary group using `usermod -aG`.
-- How to delete a group using `groupdel`.
-- How to check the exit status of the previous command using `echo $?`.
+- How to create groups using `groupadd`.
+- How to rename groups using `groupmod`.
+- How to add users to groups using `usermod -aG`.
+- How to view group members using `getent group`.
+- How to add multiple users to one group.
+- How to remove a user from a group using `gpasswd -d`.
+- How to change a group's GID.
+- How to check all groups assigned to a user.
+- How to delete groups using `groupdel`.
+- How to verify command results using `echo $?`.

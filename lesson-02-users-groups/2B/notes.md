@@ -102,8 +102,8 @@ I added multiple users to the same group.
 ### Commands
 
 ```bash
-sudo usermod -aG Developers user1
-sudo usermod -aG Developers user2
+sudo usermod -aG Developers Alxndr
+sudo usermod -aG Developers halk
 ```
 
 ### Verification

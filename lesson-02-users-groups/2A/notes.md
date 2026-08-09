@@ -1,18 +1,20 @@
 # Project 2A - Linux User Management
 
-In this project, I practiced creating, modifying, securing, verifying, and deleting Linux user accounts.
+In this project, I practiced basic Linux user management tasks, including creating users, setting passwords, verifying account information, locking and unlocking accounts, changing the user shell, modifying user information, configuring password aging, and deleting users.
 
 ---
 
 ## 1. Creating a New User
 
-I created a new Linux user named `Alxndr` with a home directory.
+I created a new Linux user named `Alxndr`.
 
 ### Command
 
 ```bash
 sudo useradd -m Alxndr
 ```
+
+The `-m` option creates a home directory for the user.
 
 ### Verification
 
@@ -33,21 +35,13 @@ I set a password for the user using the `passwd` command.
 ### Command
 
 ```bash
-sudo passwd alxndr
+sudo passwd Alxndr
 ```
 
-### Verification
-
-The following message confirmed that the password was updated successfully:
+A successful password change displays:
 
 ```text
 passwd: password updated successfully
-```
-
-I also tested the password by switching to the user account:
-
-```bash
-su - alxndr
 ```
 
 ### Screenshot
@@ -56,9 +50,9 @@ su - alxndr
 
 ---
 
-## 3. Viewing Password Status
+## 3. Checking Password Status
 
-I checked the current password status for the user.
+I checked the current password status of the user.
 
 ### Command
 
@@ -66,17 +60,17 @@ I checked the current password status for the user.
 sudo passwd -S Alxndr
 ```
 
-This command displays information about the current password status.
+This command displays information about the password status and the last password change.
 
 ### Screenshot
 
-![Viewing Password Status](2A-user-password-status.png)
+![Checking Password Status](2A-user-password-status.png)
 
 ---
 
 ## 4. Locking the User Account
 
-I locked the user account using `usermod`.
+I locked the user account so password login would be disabled.
 
 ### Command
 
@@ -92,13 +86,13 @@ sudo passwd -S Alxndr
 
 ### Screenshot
 
-![Locking the User Account](2A-user-lock-account.png)
+![Locking a User Account](2A-user-lock-account.png)
 
 ---
 
 ## 5. Unlocking the User Account
 
-I unlocked the user account.
+I unlocked the user account again.
 
 ### Command
 
@@ -114,13 +108,13 @@ sudo passwd -S Alxndr
 
 ### Screenshot
 
-![Unlocking the User Account](2A-user-unlock-account.png)
+![Unlocking a User Account](2A-user-unlock-account.png)
 
 ---
 
 ## 6. Modifying User Information
 
-I changed the comment field for the user account.
+I modified the comment field of the user account.
 
 ### Command
 
@@ -140,7 +134,48 @@ grep '^Alxndr:' /etc/passwd
 
 ---
 
-## 7. Changing the User Shell
+## 7. Viewing the User Entry in `/etc/passwd`
+
+I checked the user's account entry inside `/etc/passwd`.
+
+### Command
+
+```bash
+grep '^Alxndr:' /etc/passwd
+```
+
+The output contains information such as:
+
+- Username
+- UID
+- GID
+- User description
+- Home directory
+- Login shell
+
+### Screenshot
+
+![Verifying the Passwd Entry](2A-passwd-entry-verification.png)
+
+---
+
+## 8. Viewing User ID Information
+
+I checked the user's UID, GID, and group information.
+
+### Command
+
+```bash
+id Alxndr
+```
+
+### Screenshot
+
+![Viewing User ID Information](2A-user-id-verification.png)
+
+---
+
+## 9. Changing the User Shell
 
 I changed the user's login shell to Bash.
 
@@ -156,91 +191,35 @@ sudo usermod -s /bin/bash Alxndr
 getent passwd Alxndr
 ```
 
+The last field of the output should show:
+
+```text
+/bin/bash
+```
+
 ### Screenshot
 
 ![Changing the User Shell](2A-user-change-shell.png)
 
 ---
 
-## 8. Viewing User ID Information
+## 10. Configuring Password Aging
 
-I checked the user's UID, GID, and group memberships.
+I configured password-aging settings for the user.
 
-### Command
-
-```bash
-id Alxndr
-```
-
-### Screenshot
-
-![Viewing User ID Information](2A-user-id-verification.png)
-
----
-
-## 9. Viewing the User Entry in `/etc/passwd`
-
-I checked the user's account entry inside `/etc/passwd`.
-
-### Command
-
-```bash
-grep '^Alxndr:' /etc/passwd
-```
-
-The output includes information such as:
-
-- Username
-- UID
-- GID
-- User description
-- Home directory
-- Login shell
-
-### Screenshot
-
-![Viewing the Passwd Entry](2A-passwd-entry-verification.png)
-
----
-
-## 10. Configuring Account Expiration
-
-I configured the account to expire on August 31, 2026.
-
-### Command
+### Commands
 
 ```bash
 sudo chage -E 2026-08-31 Alxndr
-```
-
-### Verification
-
-```bash
-sudo chage -l Alxndr
-```
-
-### Screenshot
-
-![Configuring Account Expiration](2A-user-expiration-verification.png)
-
----
-
-## 11. Configuring Password Aging
-
-I configured minimum and maximum password ages.
-
-### Command
-
-```bash
 sudo chage -m 30 -M 60 Alxndr
 ```
 
-The password policy was configured as follows:
+The configuration includes:
 
+- Account expiration date: `August 31, 2026`
 - Minimum password age: `30 days`
 - Maximum password age: `60 days`
 - Password warning period: `7 days`
-- Account expiration date: `August 31, 2026`
 
 ### Verification
 
@@ -254,47 +233,7 @@ sudo chage -l Alxndr
 
 ---
 
-## 12. Changing the Home Directory
-
-I changed the user's home directory.
-
-### Command
-
-```bash
-sudo usermod -d /home/Alxndr-new -m Alxndr
-```
-
-The `-m` option moves the contents of the old home directory to the new directory.
-
-### Verification
-
-```bash
-getent passwd Alxndr
-```
-
-### Screenshot
-
-![Changing the Home Directory](2A-user-change-home-directory.png)
-
----
-
-## 13. Verifying the User Account
-
-I verified that the user account still existed.
-
-### Command
-
-```bash
-getent passwd Alxndr
-```
-
-### Screenshot
-
-![Verifying the User Account](2A-user-account-verification.png)
-
----
-
-## 14. Deleting the User
+## 11. Deleting the User
 
 I deleted the user and removed the user's home directory.
 
@@ -310,13 +249,11 @@ sudo userdel -r Alxndr
 id Alxndr
 ```
 
-After deletion, Linux displayed:
+If the user was deleted successfully, Linux displays:
 
 ```text
 id: ‘Alxndr’: no such user
 ```
-
-This confirmed that the user account was deleted successfully.
 
 ### Screenshot
 
@@ -330,9 +267,7 @@ This confirmed that the user account was deleted successfully.
 sudo useradd -m Alxndr
 id Alxndr
 
-sudo passwd alxndr
-su - alxndr
-
+sudo passwd Alxndr
 sudo passwd -S Alxndr
 
 sudo usermod -L Alxndr
@@ -344,21 +279,14 @@ sudo passwd -S Alxndr
 sudo usermod -c "Alxndr alee" Alxndr
 grep '^Alxndr:' /etc/passwd
 
-sudo usermod -s /bin/bash Alxndr
-getent passwd Alxndr
-
 id Alxndr
 
-grep '^Alxndr:' /etc/passwd
+sudo usermod -s /bin/bash Alxndr
+getent passwd Alxndr
 
 sudo chage -E 2026-08-31 Alxndr
 sudo chage -m 30 -M 60 Alxndr
 sudo chage -l Alxndr
-
-sudo usermod -d /home/Alxndr-new -m Alxndr
-getent passwd Alxndr
-
-getent passwd Alxndr
 
 sudo userdel -r Alxndr
 id Alxndr
@@ -370,15 +298,14 @@ id Alxndr
 
 - How to create a Linux user.
 - How to create a home directory for a user.
-- How to set and test a password.
+- How to set a user password.
 - How to check password status.
-- How to lock and unlock user accounts.
-- How to modify user information.
+- How to lock a user account.
+- How to unlock a user account.
+- How to modify user account information.
+- How to inspect a user's `/etc/passwd` entry.
+- How to view UID and GID information.
 - How to change a user's login shell.
-- How to check UID, GID, and group memberships.
-- How to inspect `/etc/passwd`.
-- How to configure account expiration.
-- How to configure password aging.
-- How to change a user's home directory.
-- How to verify a user account.
+- How to configure password-aging settings.
+- How to set an account expiration date.
 - How to delete a user and verify that the account no longer exists.

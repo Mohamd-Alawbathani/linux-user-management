@@ -26,7 +26,7 @@ This command displays the sudo permissions assigned to the current user.
 
 ## 2. Comparing `su` and `su -`
 
-I practiced switching to the `root` account using two different methods.
+I practiced switching to the root account using two different methods.
 
 ### Commands
 
@@ -46,11 +46,13 @@ su - root
 
 `su - root` starts a full login shell for root and loads the root user's environment.
 
-I also checked the current directory using:
+I also used:
 
 ```bash
 pwd
 ```
+
+to compare the working directory and environment.
 
 ### Screenshot
 
@@ -66,9 +68,9 @@ I opened the sudoers configuration using:
 sudo visudo
 ```
 
-`visudo` is the recommended way to edit sudo rules because it checks the file syntax before saving changes.
+`visudo` is the recommended way to edit sudo rules because it checks the sudoers file syntax before saving changes.
 
-This helps prevent configuration errors that could break sudo access.
+This helps reduce the risk of breaking sudo access because of a configuration error.
 
 ### Screenshot
 
@@ -111,7 +113,7 @@ su - Alxndr
 sudo whoami
 ```
 
-If sudo access is configured correctly, the result is:
+If sudo access is configured correctly, the output is:
 
 ```text
 root
@@ -125,57 +127,35 @@ This confirms that the user can execute commands with root privileges through `s
 
 ---
 
-## 6. Creating a Limited Sudo Rule
+## 6. Testing Limited Sudo Access
 
-Instead of giving the user full sudo permissions, I created a restricted sudo rule.
+I configured the user `Alxndr` to use only a specific privileged command.
 
-Inside `visudo`, I added:
+Inside `visudo`, I used the following rule:
 
 ```text
 Alxndr ALL=(ALL) /usr/bin/apt
 ```
 
-This rule allows `Alxndr` to use only:
-
-```bash
-sudo apt
-```
-
-with elevated privileges.
-
-### Verification
-
-```bash
-sudo -l -U Alxndr
-```
-
-The allowed command was shown as:
-
-```text
-(ALL) /usr/bin/apt
-```
-
-### Screenshot
-
-![Creating a Limited Sudo Rule](2C-limited-sudo-rule.png)
-
----
-
-## 7. Testing Least Privilege
-
-I removed the user from the full `sudo` group:
+I then removed the user from the full `sudo` group:
 
 ```bash
 sudo deluser Alxndr sudo
 ```
 
-Then I verified the remaining permissions:
+### Verification
+
+I checked the remaining sudo permissions using:
 
 ```bash
 sudo -l -U Alxndr
 ```
 
-Only `/usr/bin/apt` remained available.
+The allowed command was:
+
+```text
+(ALL) /usr/bin/apt
+```
 
 I switched to the user:
 
@@ -203,39 +183,9 @@ This demonstrated the **Principle of Least Privilege**, where a user receives on
 
 ---
 
-## 8. Editing a Protected File with `sudoedit`
+## 7. Removing Full Sudo Access
 
-I used `sudoedit` to safely open the protected `/etc/hosts` file.
-
-### Command
-
-```bash
-sudoedit /etc/hosts
-```
-
-Using `sudoedit` is safer than launching an entire text editor directly with root privileges.
-
-For example, instead of:
-
-```bash
-sudo nano /etc/hosts
-```
-
-I used:
-
-```bash
-sudoedit /etc/hosts
-```
-
-### Screenshot
-
-![Editing a Protected File with sudoedit](2C-sudoedit-file-edit.png)
-
----
-
-## 9. Removing Full Sudo Access
-
-I removed the user `Alxndr` from the `sudo` group.
+I removed `Alxndr` from the `sudo` group.
 
 ### Command
 
@@ -257,11 +207,35 @@ I also checked the user's sudo permissions using:
 sudo -l -U Alxndr
 ```
 
-This allowed me to confirm that full sudo access had been removed.
+### Screenshot
+
+![Removing Full Sudo Access](2C-remove-sudo-access.png)
+
+---
+
+## 8. Editing a Protected File with `sudoedit`
+
+I used `sudoedit` to safely open the protected `/etc/hosts` file.
+
+### Command
+
+```bash
+sudoedit /etc/hosts
+```
+
+`sudoedit` allows an authorized user to edit a protected system file without running the entire text editor directly as root.
+
+This is safer than using:
+
+```bash
+sudo nano /etc/hosts
+```
+
+because the editor itself does not need to run with full root privileges.
 
 ### Screenshot
 
-![Removing Sudo Access](2C-remove-sudo-access.png)
+![Editing the Hosts File with sudoedit](2C-sudoedit-hosts.png)
 
 ---
 
@@ -287,7 +261,6 @@ sudo -l -U Alxndr
 sudo deluser Alxndr sudo
 
 sudo apt update
-
 sudo useradd testuser
 
 sudoedit /etc/hosts
@@ -299,13 +272,11 @@ sudoedit /etc/hosts
 
 * How to check sudo permissions using `sudo -l`.
 * The difference between `su` and `su -`.
-* How to safely edit sudo rules using `visudo`.
+* How to safely edit sudoers using `visudo`.
 * How to add a user to the `sudo` group.
-* How to verify elevated privileges with `sudo whoami`.
-* How to create a restricted sudo rule.
+* How to verify elevated privileges using `sudo whoami`.
+* How to create and test limited sudo access.
 * How to apply the principle of least privilege.
-* How to allow one command while denying other privileged commands.
-* How to safely edit protected files using `sudoedit`.
 * How to remove full sudo access from a user.
+* How to edit protected files safely using `sudoedit`.
 * How Linux controls administrative privileges.
-

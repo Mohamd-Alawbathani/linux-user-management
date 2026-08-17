@@ -2,47 +2,43 @@
 
 In this project, I practiced troubleshooting Linux user and group issues.
 
-The goal of this project was to learn how to verify user accounts, check group membership, inspect running processes, review account status, and investigate login activity.
+The goal of this project was to learn how to verify users and groups, inspect user processes, check account status, investigate login activity, and identify common user account problems.
 
 ---
 
-## 1. Verifying Group Membership
+## 1. Verifying Group Information
 
-I checked whether a user belonged to the expected Linux group.
+I verified that the `halk` group exists by checking the `/etc/group` file.
 
 ### Command
 
 ```bash
-groups username
+grep '^halk:' /etc/group
 ```
 
-I also checked the group configuration file using:
+The `^halk:` pattern searches specifically for a group entry that begins with `halk:`.
 
-```bash
-grep groupname /etc/group
-```
-
-This helps identify permission problems caused by incorrect group membership.
+The output confirmed that the group exists and displayed its GID.
 
 ### Screenshot
 
-![Verifying Group Membership](2D-group-members-verification.png)
+![Verifying Group Information](2D-group-members-verification.png)
 
 ---
 
 ## 2. Checking User Processes
 
-I checked which processes were running under a specific user account.
+I checked the processes running under the `halk` user account.
 
 ### Command
 
 ```bash
-ps -u username
+ps -u halk
 ```
 
 This command displays processes owned by the specified user.
 
-This is useful before modifying or deleting a user account because active processes may prevent account management operations.
+Checking active processes is useful when troubleshooting user account problems or before deleting a user.
 
 ### Screenshot
 
@@ -52,17 +48,17 @@ This is useful before modifying or deleting a user account because active proces
 
 ## 3. Terminating User Processes
 
-I practiced stopping all running processes owned by a specific user.
+I practiced terminating processes owned by the `halk` user.
 
 ### Command
 
 ```bash
-sudo killall -u username
+sudo killall -u halk
 ```
 
 The `-u` option specifies the user whose processes should be terminated.
 
-This can be useful when active processes prevent a user account from being deleted.
+This can be useful when active processes prevent a user account from being modified or deleted.
 
 ### Screenshot
 
@@ -70,25 +66,32 @@ This can be useful when active processes prevent a user account from being delet
 
 ---
 
-## 4. Verifying That a User Account Exists
+## 4. Verifying a User Account
 
-I checked the `/etc/passwd` file to confirm that a user account existed on the system.
+I verified that the `halk` user account exists by checking the `/etc/passwd` file.
 
 ### Command
 
 ```bash
-grep username /etc/passwd
+grep '^halk:' /etc/passwd
 ```
 
-If the account exists, Linux displays the corresponding user entry.
+The output confirmed that the user exists.
 
-Example:
+Example output:
 
 ```text
-username:x:1001:1001:User Name:/home/username:/bin/bash
+halk:x:1009:1010::/home/halk:/bin/bash
 ```
 
-This information includes the username, UID, GID, home directory, and login shell.
+This entry contains information such as:
+
+- Username
+- Password placeholder
+- UID
+- GID
+- Home directory
+- Login shell
 
 ### Screenshot
 
@@ -96,29 +99,29 @@ This information includes the username, UID, GID, home directory, and login shel
 
 ---
 
-## 5. Checking Account Status
+## 5. Checking User Account Status
 
-I checked the password and account status of a user.
+I checked the password and account status of the `halk` user.
 
 ### Command
 
 ```bash
-sudo passwd -S username
+sudo passwd -S halk
 ```
 
-This command displays information about the user's password status.
+The `-S` option displays password status information for the account.
 
-It can help identify whether the password is configured, locked, or affected by account settings.
+This can help determine whether the user's password is configured or locked.
 
 ### Screenshot
 
-![Checking Account Status](2D-passwd-account-status.png)
+![Checking User Account Status](2D-passwd-account-status.png)
 
 ---
 
 ## 6. Checking the Last Login
 
-I used `lastlog2` to display the latest login information for user accounts.
+I used `lastlog2` to check the latest login information recorded for users on the system.
 
 ### Command
 
@@ -126,14 +129,15 @@ I used `lastlog2` to display the latest login information for user accounts.
 lastlog2
 ```
 
-This command displays information such as:
+The output can display information such as:
 
 - Username
 - Terminal
 - Remote host
-- Latest login date and time
+- Latest login date
+- Latest login time
 
-This is useful for identifying accounts that have not been used recently.
+This is useful for identifying when a user last logged into the system.
 
 ### Screenshot
 
@@ -151,15 +155,15 @@ I used the `last` command to review previous login and logout activity.
 last
 ```
 
-This command can display:
+The `last` command can display:
 
 - User login sessions
 - Logout times
 - Session duration
+- System boots
 - System reboots
-- Boot events
 
-This is useful for system audits and troubleshooting login activity.
+This information is useful when investigating previous user activity.
 
 ### Screenshot
 
@@ -167,9 +171,9 @@ This is useful for system audits and troubleshooting login activity.
 
 ---
 
-## 8. Checking Active Users
+## 8. Checking Currently Active Users
 
-I used the `w` command to view users who currently had active sessions.
+I used the `w` command to view users who currently have active sessions on the system.
 
 ### Command
 
@@ -184,163 +188,152 @@ The output can include:
 - Login time
 - Idle time
 - CPU usage
-- Current command or process
+- Current process or command
 
-This is useful for checking whether a user is logged in and whether the session is active or idle.
+This is useful for determining who is currently logged in and whether their session is active or idle.
 
 ### Screenshot
 
-![Checking Active Users](2D-w-active-users.png)
+![Checking Currently Active Users](2D-w-active-users.png)
 
 ---
 
 ## Commands Practiced
 
 ```bash
-groups username
-grep groupname /etc/group
-ps -u username
-sudo killall -u username
-grep username /etc/passwd
-sudo passwd -S username
-sudo chage --list username
+grep '^halk:' /etc/group
+
+ps -u halk
+
+sudo killall -u halk
+
+grep '^halk:' /etc/passwd
+
+sudo passwd -S halk
+
 lastlog2
+
 last
-who
+
 w
+```
+
+---
+
+## Important Files
+
+### `/etc/passwd`
+
+Stores basic Linux user account information.
+
+```text
+/etc/passwd
+```
+
+---
+
+### `/etc/group`
+
+Stores Linux group information.
+
+```text
+/etc/group
+```
+
+---
+
+### `/etc/shadow`
+
+Stores protected password and password-aging information.
+
+```text
+/etc/shadow
 ```
 
 ---
 
 ## Troubleshooting Process
 
-When a user or group problem occurs, I learned to troubleshoot it in a logical order.
+When troubleshooting Linux user and group problems, I learned to investigate the problem before making changes.
 
-### User Account Problems
-
-1. Verify that the user account exists.
+### Step 1 - Verify the User
 
 ```bash
-grep username /etc/passwd
+grep '^halk:' /etc/passwd
 ```
 
-2. Check the user's account and password status.
+This confirms whether the user account exists.
+
+### Step 2 - Verify the Group
 
 ```bash
-sudo passwd -S username
+grep '^halk:' /etc/group
 ```
 
-3. Check password aging and expiration information if necessary.
+This confirms whether the group exists.
+
+### Step 3 - Check Account Status
 
 ```bash
-sudo chage --list username
+sudo passwd -S halk
 ```
 
-4. Check whether the user has active processes.
+This displays information about the user's password status.
+
+### Step 4 - Check Running Processes
 
 ```bash
-ps -u username
+ps -u halk
 ```
 
-5. Terminate the processes if required.
+This displays processes owned by the user.
+
+### Step 5 - Terminate Processes if Required
 
 ```bash
-sudo killall -u username
+sudo killall -u halk
 ```
 
----
+This terminates processes owned by the specified user.
 
-### Login Problems
-
-If a user cannot log in, I check:
-
-- Whether the account exists
-- Whether a valid password is configured
-- Whether the password has expired
-- Whether the account is locked
-- Whether the account has expired
-- Whether the login shell is valid
-
-Useful commands include:
-
-```bash
-grep username /etc/passwd
-sudo passwd -S username
-sudo chage --list username
-```
-
----
-
-### Login Activity
-
-I used several commands to investigate login activity.
+### Step 6 - Investigate Login Activity
 
 ```bash
 lastlog2
 ```
 
-Displays the latest login information for users.
-
 ```bash
 last
 ```
-
-Displays previous login and logout sessions.
-
-```bash
-who
-```
-
-Displays users who currently have login sessions.
 
 ```bash
 w
 ```
 
-Displays active users with additional session information.
+These commands provide information about previous and current login activity.
 
 ---
 
 ## What I Learned
 
-* How to verify that a Linux user account exists.
-* How to check Linux group membership.
-* How to inspect processes owned by a specific user.
-* How to terminate user processes when necessary.
-* How to check password and account status.
-* How to investigate user login problems.
-* How to use `lastlog2` to check the latest login information.
-* How to use `last` to review login and logout history.
-* How to use `who` and `w` to identify active user sessions.
-* How to troubleshoot user and group problems in a logical order.
-* How Linux stores user information in `/etc/passwd`.
-* How Linux stores group information in `/etc/group`.
-* How account status, active processes, and login history can help identify system problems.
-
----
-
-## Key Troubleshooting Commands
-
-```bash
-grep username /etc/passwd
-grep groupname /etc/group
-groups username
-ps -u username
-sudo killall -u username
-sudo passwd -S username
-sudo chage --list username
-lastlog2
-last
-who
-w
-```
+- How to verify that a Linux user exists using `/etc/passwd`.
+- How to verify that a Linux group exists using `/etc/group`.
+- How to identify a user's UID and GID.
+- How to check processes owned by a specific user.
+- How to terminate a user's running processes.
+- How to check password and account status using `passwd -S`.
+- How to use `lastlog2` to view the latest login information.
+- How to use `last` to review previous login and logout sessions.
+- How to use `w` to inspect currently active user sessions.
+- How to troubleshoot Linux user and group problems in a logical order.
+- How Linux administrators gather information before making account changes.
 
 ---
 
 ## Conclusion
 
-This project helped me understand how Linux administrators troubleshoot user and group problems.
+This project helped me understand how Linux administrators troubleshoot user and group issues.
 
-Instead of immediately changing or deleting accounts, I learned to first identify the cause of the problem by checking account information, group membership, running processes, password status, and login history.
+Instead of immediately modifying or deleting an account, I learned to first verify the user and group, check account status, inspect running processes, and investigate login activity.
 
-These troubleshooting commands provide useful information for diagnosing common Linux user and group issues.
+These troubleshooting commands provide important information for diagnosing common Linux user and group problems.
